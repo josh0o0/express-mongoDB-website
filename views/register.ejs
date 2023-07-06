@@ -1,0 +1,35 @@
+<% layout('layout') %>
+
+<body>
+    <main class="main" id="register">
+        <div class="box-center">
+            <h1>註冊</h1>
+            <%-partial('partials/message') %>
+            <form method="post" action="/member/register">
+                <section class="row-split">
+                    <label for="username" class="row-split"><span>名</span><span>稱</span></label>
+                    <input required type="text" name="name" id="name" value='<%=name%>'>
+                </section>
+                <section class="row-split">
+                    <label for="email" class="row-split"><span>電</span><span>子</span><span>郵</span><span>件</span></label>
+                    <input required type="email" name="email" id="email" value="<%=email%>">
+                </section>
+                <section class="row-split">
+                    <label for="password" class="row-split"><span>密</span><span>碼</span></label>
+                    <input type="password" name="password" required>
+                </section>
+                <section class="row-split">
+                    <label for="confirmPassword"
+                        class="row-split"><span>確</span><span>認</span><span>密</span><span>碼</span></label>
+                    <input required type="password" name="confirmPassword">
+                </section>
+                <section class="row-center row-submit">
+                    <input type="submit" value="註冊">
+                </section>
+            </form>
+            <p>
+                已經是會員? <a href="/member/login">點我登入</a>
+            </p>
+        </div>
+    </main>
+</body>

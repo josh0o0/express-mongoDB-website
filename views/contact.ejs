@@ -1,0 +1,23 @@
+<% layout('layout') %>
+
+<body>
+	<main>
+		<h1>聯繫我們</h1>
+		<%-partial('partials/message') %>
+		<section class="box">
+			<form action="/contact" method="POST">
+				<section>
+					<label for="name">姓名</label>
+					<input type="text" id="name" name="name" required>
+				</section>
+				<!-- <label class="index" for="email">電子郵件：</label>
+				<input type="email" class="index" id="email" name="email" required><br> -->
+				<section>
+					<label for="message">留言</label>
+					<textarea id="message" name="message" required></textarea>
+				</section>
+				<input type="submit" value="提交">
+			</form>
+		</section>
+	</main>
+</body>

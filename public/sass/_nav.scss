@@ -1,0 +1,221 @@
+
+/* 頂部導航 */
+/* #region */
+nav {
+	width: 100%;
+	top: 0;
+	position: absolute;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #ff8800;
+	padding: 5px 2%;
+	/* height: 40px; */
+
+	box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+
+	/* 回捲顯示 */
+	&.sticky {
+		/* box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1); */
+		position: fixed;
+		top: 0;
+		/* left: 0; */
+		/* width: 100%; */
+		z-index: 100;
+		transition: transform 5s ease-in-out;
+	}
+
+	.logo {
+		font-weight: bold;
+		font-size: 20px;
+		color: #fff;
+		text-decoration: none;
+		// position: relative;
+		// left: 20px;
+	}
+
+	.login-button {
+		box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5);
+		border-radius: 10px;
+	}
+
+	>label,
+	>input[type="checkbox"] {
+		display: none;
+	}
+
+	>ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		/* margin-right: 10px; */
+		/* overflow: hidden; */
+		background-color: #ff6f00;
+		/* text-align: right; */
+		/* 右对齐 */
+	}
+
+	>ul>li {
+		display: inline-block;
+	}
+
+	>ul>li>a {
+		display: block;
+		padding: 10px 20px;
+		color: #ffffff;
+		text-decoration: none;
+		font-size: 18px;
+	}
+
+	>ul>li:hover {
+		background-color: #ffa45e;
+	}
+
+	.img {
+		width: 50px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		/* padding-left: 20px; */
+		/* display: block; */
+		/* position: relative; */
+
+		img {
+			height: 39px;
+			width: 39px;
+			position: absolute;
+			/* top: 50%;
+			right: 11%; */
+			/* 這裡的值可以根據你的需要做調整 */
+			/* transform: translateY(-50%); */
+			border-radius: 50%;
+		}
+	}
+
+	.dropdown {
+		position: relative;
+
+		/* 菜單前的符號 */
+		// >a::before {
+		// 	content: "\2228";
+		// 	display: inline-block;
+		// 	margin-right: 5px;
+		// }
+
+
+		.dropdown-content {
+			display: none;
+			list-style-type: none;
+			position: absolute;
+			padding: 0;
+			background-color: #f1efef;
+			min-width: 100px;
+			border-radius: 3px;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+
+			>li>a {
+				color: black;
+				padding: 10px 10px;
+				text-decoration: none;
+				display: block;
+				text-align: left;
+			}
+
+			>li>a:hover {
+				background-color: #f39797;
+			}
+
+			>li:not(:last-child)::after {
+				content: "";
+				display: block;
+				height: 1px;
+				background-color: #f7d3d3;
+				/* margin: 5px 0; */
+			}
+
+			li:last-child {
+				margin: 0 0 5px 0;
+			}
+		}
+
+		&:hover .dropdown-content {
+			display: block;
+		}
+
+		.menu-dropdown-content {
+			display: none;
+		}
+
+		.account-dropdown-content {
+			right: 0;
+		}
+
+		.account-dropdown-content li a {
+			text-align: right;
+		}
+	}
+
+	/* 对于小屏幕设备（手机，平板等），导航栏的高度和字体大小需要调整 */
+	/* #region */
+	@media only screen and (max-width: 500px) {
+		padding: 5px 0;
+		font-size: 14px;
+
+		>ul {
+			display: none;
+		}
+
+		>label {
+			display: block;
+			position: relative;
+			right: 10px;
+			font-size: 25px;
+		}
+
+		#nav-expand:checked+ul {
+			display: block;
+		}
+
+		.logo {
+			font-size: 18px;
+			position: relative;
+			left: 10px;
+		}
+
+		>ul {
+			display: none;
+			position: absolute;
+			top: 40px;
+			width: 100%;
+			text-align: center;
+
+			>li {
+				display: block;
+				margin: 5px 0;
+			}
+		}
+
+		.dropdown {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			.dropdown-content {
+				background-color: #ffd4a2;
+			}
+
+			.dropdown-content li:not(:last-child)::after {
+				display: none;
+			}
+
+			&:hover .dropdown-content {
+				position: static;
+			}
+		}
+	}
+
+	/* #endregion */
+}
+
+/* #endregion */

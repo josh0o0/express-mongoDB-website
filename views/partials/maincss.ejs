@@ -1,0 +1,841 @@
+/* 全局樣式 */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    /* min-height: 100vh; */
+}
+
+/* 頂部導航 */
+/* #region */
+nav {
+    width: 100%;
+    top: 0;
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ff8800;
+    padding: 5px 2%;
+    /* height: 40px; */
+
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 回捲顯示 */
+nav.sticky {
+    /* box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1); */
+    position: fixed;
+    top: 0;
+    /* left: 0; */
+    /* width: 100%; */
+    z-index: 100;
+    transition: transform 5s ease-in-out;
+}
+
+
+.logo {
+    font-weight: bold;
+    font-size: 20px;
+    color: #fff;
+    text-decoration: none;
+    /* position: relative;
+    left: 20px; */
+}
+
+nav>label,
+nav>input[type="checkbox"] {
+    display: none;
+}
+
+nav>ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    /* margin-right: 10px; */
+    /* overflow: hidden; */
+    background-color: #ff6f00;
+    /* text-align: right; */
+    /* 右对齐 */
+}
+
+nav>ul>li {
+    display: inline-block;
+}
+
+nav>ul>li>a {
+    display: block;
+    padding: 10px 20px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav>ul>li:hover {
+    background-color: #ffa45e;
+}
+
+.dropdown {
+    position: relative;
+}
+
+/* 菜單前的符號 */
+/* .dropdown>a::before {
+    content: "\2228";
+    display: inline-block;
+    margin-right: 5px;
+} */
+
+.dropdown-content {
+    display: none;
+    list-style-type: none;
+    position: absolute;
+    padding: 0;
+    background-color: #f1efef;
+    min-width: 100px;
+    border-radius: 3px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.menu-dropdown-content {
+    display: none;
+}
+
+.account-dropdown-content {
+    right: 0;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content li a {
+    color: black;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.account-dropdown-content li a {
+    text-align: right;
+}
+
+.dropdown-content>li>a:hover {
+    background-color: #f39797;
+}
+
+.dropdown-content li:not(:last-child)::after {
+    content: "";
+    display: block;
+    height: 1px;
+    background-color: #f7d3d3;
+    /* margin: 5px 0; */
+}
+
+.dropdown-content li:last-child {
+    margin: 0 0 5px 0;
+}
+
+.login-button {
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}
+
+nav .img {
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* padding-left: 20px; */
+    /* display: block; */
+    /* position: relative; */
+}
+
+nav .img img {
+    height: 39px;
+    width: 39px;
+    position: absolute;
+    /* top: 50%;
+    right: 11%; */
+    /* 這裡的值可以根據你的需要做調整 */
+    /* transform: translateY(-50%); */
+    border-radius: 50%;
+}
+
+
+/* 对于小屏幕设备（手机，平板等），导航栏的高度和字体大小需要调整 */
+/* #region */
+@media only screen and (max-width: 500px) {
+
+    nav>ul {
+        display: none;
+    }
+
+    nav>label {
+        display: block;
+        position: relative;
+        right: 10px;
+        font-size: 25px;
+    }
+
+    #nav-expand:checked+ul {
+        display: block;
+    }
+
+    nav {
+        padding: 5px 0;
+        font-size: 14px;
+    }
+
+    .logo {
+        font-size: 18px;
+        position: relative;
+        left: 10px;
+    }
+
+    nav>ul {
+        display: none;
+        position: absolute;
+        top: 40px;
+        width: 100%;
+        text-align: center;
+    }
+
+    nav>ul>li {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .dropdown {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .dropdown-content {
+        background-color: #ffd4a2;
+    }
+
+    .dropdown-content li:not(:last-child)::after {
+        display: none;
+    }
+
+    .dropdown:hover .dropdown-content {
+        position: static;
+    }
+}
+
+/* #endregion */
+/* #endregion */
+/* ........ ...................................*/
+
+
+/* 首頁頁面主要內容 */
+/* #region */
+main {
+    /* max-width: 1200px; */
+    /* margin: 0 auto; */
+    padding: 70px 20px 30px 20px;
+    /* 導航列高度 + 其他間距 */
+    box-sizing: border-box;
+
+    flex: 1;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+h1,
+h2,
+h3 {
+    margin-top: 0;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+.main ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.main li {
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #0072c6;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #005ba1;
+}
+
+label.index {
+    display: inline-block;
+    width: 80px;
+}
+
+input[type="text"].index,
+input[type="email"].index,
+textarea {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="submit"].index {
+    background-color: #0072c6;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"].index:hover {
+    background-color: #005ba1;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+table th,
+table td {
+    padding: 10px;
+    border: 1px solid #929292;
+}
+
+table th {
+    background-color: #ffbcbc;
+}
+
+table tr:nth-child(even) {
+    background-color: #c1acac;
+}
+
+/* #endregion */
+
+
+/* row , col */
+/* #region */
+.row {
+    display: flex;
+    padding-bottom: 20px;
+}
+
+.row-center {
+    justify-content: center;
+}
+
+.row-split {
+    justify-content: space-between;
+}
+
+.row-submit {
+    padding: 0;
+}
+
+.col {
+    display: flex;
+    overflow: auto;
+}
+
+.col-vertical {
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.col-split {
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* #endregion */
+
+/* -----box----- */
+/* #region */
+.box {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 4px 0 0 #e5e5e5;
+    /* text-align: center; */
+}
+
+.box-center {
+    margin: 50px auto 0 auto;
+    width: 50%;
+    padding: 40px 44px;
+}
+
+.box h1 {
+    text-align: center;
+}
+
+.box form {
+    padding: 15px;
+    background-color: rgb(255 180 107 / 66%);
+    border-radius: 5px;
+    /* text-align: center; */
+}
+
+.box input[type="email"],
+.box input[type="text"],
+.box input[type="password"] {
+    font-size: 22px;
+    height: 48px;
+    flex: 1;
+    border-radius: 6px;
+    background-color: #e3dcdc;
+    border: solid 1px #9f6f6f;
+    padding: 0 10px;
+    overflow: hidden;
+}
+
+.box input[type="submit"],
+.box input[type="reset"] {
+    /* margin: 0 20px; */
+    margin-top: 10px;
+    background-color: #666;
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 16px;
+    height: 48px;
+    width: 100px;
+}
+
+.box input[type="submit"]:hover,
+.box input[type="reset"]:hover {
+    background-color: #737373;
+}
+
+.box p {
+    position: relative;
+    left: 0;
+}
+
+.box textarea {
+    font-size: 22px;
+    background-color: #e3dcdc;
+}
+
+
+/* #region */
+@media only screen and (max-width: 500px) {
+    .box {
+        width: 100%;
+        /* margin: 0; */
+        padding: 0;
+        /* background-color: #f0f0f0; */
+    }
+}
+
+/* #endregion */
+/* #endregion */
+
+/* -----search----- */
+/* #region */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.search-wrapper form {
+    display: flex;
+    align-items: center;
+}
+
+.search-container input[type=text] {
+    width: 40%;
+    padding: 10px;
+    /* border: none; */
+    border-radius: 5px;
+    font-size: 20px;
+    /* flex: 1; */
+}
+
+.search-container button {
+    padding: 10px 20px;
+    background-color: #F27B56;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.search-container button[type=reset] {
+    background-color: #d6d6d6;
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.5);
+    color: rgb(0, 0, 0);
+    display: none;
+}
+
+.search-container button[type=submit]:hover {
+    background-color: #FFA07A;
+}
+
+.search-container button[type=reset]:hover {
+    background-color: #e7e7e7;
+}
+
+/* #endregion */
+
+
+
+/* login , register */
+/* #region */
+#register .box {
+    width: 60%;
+}
+
+/* #login form,
+#register form {
+    padding-right: 30px;
+    padding-left: 30px;
+} */
+
+#login .box label,
+#register .box label {
+    width: 100px;
+    font-size: 22px;
+    padding-right: 2%;
+}
+
+/* #register .box label {
+    width: 25%;
+} */
+
+@media only screen and (max-width: 900px) {
+
+    #login .box,
+    #register .box {
+        width: 100%;
+    }
+
+    #login .box h1,
+    #register .box h1 {
+        margin-bottom: 10px;
+    }
+
+    /* #login form,
+    #register form {
+        padding: 15px;
+    } */
+
+    #login form .row:not(.row-submit),
+    #register form .row:not(.row-submit) {
+        display: block;
+    }
+
+    #login form .row:not(.row-submit)>input,
+    #register form .row:not(.row-submit)>input {
+        width: 100%;
+        box-sizing: border-box;
+        height: 38px;
+    }
+
+    /* #login form .row-submit>input,
+    #register form .row-submit>input {
+        width: 30%;
+        height: 35px;
+    } */
+}
+
+/* #endregion */
+
+/* infoPage , journalManage */
+/* #region */
+/* #infoPage,
+#journalManage {
+    padding: 100px 48px 30px 48px;
+} */
+
+#infoPage h1,
+#journalManage h1 {
+    margin: 0;
+}
+
+#infoPage form,
+#journalManage form {
+    padding: 45px 50px 35px 50px;
+}
+
+#infoPage .row-submit {
+    padding-top: 40px;
+}
+
+#infoPage .col2 {
+    width: 48%;
+}
+
+#infoPage .col-vertical {
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+#infoPage .box label {
+    font-size: 27px;
+    font-weight: bold;
+}
+
+#infoPage .img {
+    margin-right: 20px;
+    float: left;
+    background: #ffebb5;
+    height: 100px;
+    width: 100px;
+    text-align: center;
+}
+
+#infoPage .box input[type="submit"],
+#infoPage .box input[type="reset"] {
+    margin: 0 20px;
+}
+
+
+/* #region */
+@media only screen and (max-width: 500px) {
+
+    #infoPage form,
+    #journalManage form {
+        padding: 2%;
+    }
+}
+
+/* #endregion */
+/* #endregion */
+
+
+/* journal */
+/* #region */
+/* main#journal {
+    margin: 20px;
+} */
+
+#journal .sort {
+    margin-bottom: 20px;
+}
+
+#journal .sort label {
+    font-weight: bold;
+    /* position: relative; */
+    /* top: 15; */
+}
+
+#journal .sort select {
+    padding: 5px 10px;
+    border-radius: 5px;
+    /* border: none; */
+    background-color: #ffffff;
+    color: #333;
+}
+
+#journal .row .col {
+    flex: 1;
+    justify-content: flex-start;
+}
+
+#journal .row .col:not(:last-child) {
+    margin-right: 20px;
+}
+
+#journal section {
+    background-color: rgb(255 89 0 / 12%);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+#journal h2 {
+    margin: 0;
+}
+
+#journal .date {
+    color: #aaa;
+    font-size: 0.8em;
+    margin: 0;
+    /* margin-bottom: 10px; */
+}
+
+#journal .content {
+    margin-top: 10px;
+    margin-bottom: 5px;
+
+    /* 多行 */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    
+    /* word-break: break-all; */
+
+    /* 單行 */
+    /* text-overflow: ellipsis;
+    white-space: nowrap; */
+}
+
+
+#journal a {
+    width: fit-content;
+    /* font-size: 0.8em; */
+    color: #fb6501;
+}
+
+/* 
+#journal a:hover {
+	background-color: #ff9f43;
+} */
+
+@media only screen and (max-width: 500px) {
+    #journal {
+        margin: 0;
+    }
+
+    #journal .search-container {
+        margin: 0 0 20px 0;
+    }
+
+    #journal .search-container * {
+        font-size: unset;
+    }
+
+    #journal .row {
+        display: unset;
+        padding: 0;
+    }
+
+    #journal .row .col:not(:last-child) {
+        margin-right: 0;
+    }
+}
+
+/* #endregion */
+
+
+/* journal-watch */
+/* #region */
+main#journal-watch {
+    padding-top: 90px;
+    padding-left: 40px;
+    padding-right: 40px;
+    background-color: #ffdd9f;
+}
+
+#journal-watch article {
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #fff9ef;
+    display: flex;
+    flex-direction: column;
+}
+
+#journal-watch section {
+    margin-bottom: 20px;
+}
+
+#journal-watch h1 {
+    margin-bottom: 0;
+}
+
+#journal-watch .date {
+    color: #aaa;
+    margin-top: 0;
+}
+
+#journal-watch .content {
+    margin-bottom: 30px;
+    flex: 1;
+    /* word-break: break-all; */
+    overflow: hidden;
+}
+
+#journal-watch p {
+    font-size: 23px;
+    margin: 0;
+}
+
+#journal-watch .bottom {
+    margin: 0;
+    padding: 0;
+}
+
+#journal-watch a {
+    width: fit-content;
+    font-size: 25px;
+    color: #fb6501;
+}
+
+#journal-watch a.col-left {
+    margin-right: auto;
+}
+
+#journal-watch a.col-right {
+    margin-left: auto;
+}
+
+/* #endregion */
+
+
+/* 頁腳 */
+/* #region */
+footer {
+    background-color: #ddd;
+    padding: 10px;
+    text-align: center;
+    margin-top: auto;
+}
+
+@media only screen and (max-width: 500px) {
+    footer {
+        padding: 0;
+    }
+}
+
+/* #endregion */

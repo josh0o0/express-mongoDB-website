@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta name="google-site-verification" content="1BN45VrAJQ-mm_LNU8BaJ-qCcPy7u7-lujXn8pRVbbY" />
+    <title><%= title %></title>
+    <link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" /> -->
+    <link rel="stylesheet" href="/sass/main.css" type="text/css">
+    <!-- <link rel="stylesheet" href="/stylesheets/bootstrap-alert.css" /> -->
+
+    <% if (typeof description !== 'undefined'){ %>
+    <meta name="description" content=<%= description %>>
+    <% }%>
+</head>
+
+<style>
+</style>
+
+<body>
+    <%-partial('partials/header')%>
+    <%- body %>
+    <%-partial('partials/footer')%>
+</body>
+
+<!-- Scripts -->
+<script>
+    let lastScrollPosition = 0;
+
+    window.addEventListener("scroll", function () {
+        const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (currentScrollPosition >= lastScrollPosition) {
+            document.getElementById("navbar-container").classList.remove('sticky');
+        } else if(!document.querySelector('#nav-expand').checked) {
+            document.getElementById("navbar-container").classList.add('sticky');
+        }
+
+        lastScrollPosition = currentScrollPosition;
+    });
+
+    document.querySelector('#nav-expand').addEventListener("change", () => {
+        if (document.querySelector('#nav-expand').checked) {
+            document.getElementById("navbar-container").classList.remove('sticky');
+            
+        }
+    });
+</script>
+
+</html>

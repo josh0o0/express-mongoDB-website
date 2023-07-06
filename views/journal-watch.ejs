@@ -1,0 +1,27 @@
+<% layout('layout') %>
+
+<body>
+    <main id="journal-watch" class="col-vertical">
+        <article>
+            <section>
+                <h1><%= journal.thisJournal.title %></h1>
+                <h3>作者：<%= journal.thisJournal.member.name %></h3>
+                <p class="date">
+                    <%= new Date(journal.thisJournal.timestamp).toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'})%></p>
+            </section>
+
+            <section class="content">
+                <%- journal.thisJournal.content %>
+            </section>
+        </article>
+
+        <section>
+            <% if (journal.previousID?.id != undefined){ %>
+            <a class="col-left" href="/journals/<%= journal.previousID.id %>">上一篇</a>
+            <% }%>
+            <% if (journal.nextID?.id != undefined){ %>
+            <a class="col-right" href="/journals/<%= journal.nextID.id %>">下一篇</a>
+            <% }%>
+        </section>
+    </main>
+</body>

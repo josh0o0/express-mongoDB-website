@@ -1,0 +1,40 @@
+{
+  "name": "member-system",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "nodemon ./bin/www",
+    "scss": "sass --watch public/assets/sass/main.scss public/assets/sass/main.css"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cheerio": "^1.0.0-rc.12",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.3",
+    "ejs": "~2.6.1",
+    "ejs-locals": "^1.0.2",
+    "express": "~4.16.1",
+    "express-session": "^1.17.3",
+    "formidable": "^2.1.1",
+    "http-errors": "~1.6.3",
+    "jsdom": "^22.1.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.2",
+    "mongoose-sequence": "^5.3.1",
+    "morgan": "~1.9.1",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
+    "node-fetch-commonjs": "^3.2.4",
+    "pusher": "^5.1.3",
+    "python-shell": "^5.0.0",
+    "sass": "^1.63.6",
+    "socket.io": "^4.7.0"
+  },
+  "main": "app.js",
+  "author": "YU",
+  "license": "ISC",
+  "description": ""
+}

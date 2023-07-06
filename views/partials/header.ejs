@@ -1,0 +1,44 @@
+<header>
+    <nav id="navbar-container">
+        <a href="/" class="logo">YuSei</a>
+        <label for="nav-expand">☰</label>
+        <input type="checkbox" id="nav-expand" >
+        <ul>
+            <li><a href="/">首頁</a></li>
+            <li><a href="/journal">日誌</a></li>
+            <li><a href="/contact">聯繫我們</a></li>
+            <li><a href="/MessageSquare">留言板</a></li>
+            <!-- <li class="dropdown">
+                <a>菜單</a>
+                <ul class="dropdown-content menu-dropdown-content">
+                    <li><a href="#">選項1</a></li>
+                    <li><a href="#">選項2</a></li>
+                    <li><a href="#">選項3</a></li>
+                </ul>
+            </li> -->
+            <!-- <li><a href="#">聯繫我們</a></li> -->
+
+            <% if (!isLogin){ %>
+            <li><a class="login-button" href="/member/login">登入</a></li>
+            <% }else{ %>
+            <li class="dropdown">
+                <% if (member_info.img!==null){ %>
+                    <div class="row"><img src="data:image/jpg;base64,<%= member_info.img%>" alt="Your icon"></div>
+                <% }else{ %>
+                    <div class="row"><img src="/images/user_icon.png" alt="Your icon"></div>
+                <% } %>
+                <ul class="dropdown-content account-dropdown-content">
+                    <li><a href="/user/home">用戶頁面</a></li>
+                    <li><a href="/user/info">個人資料</a></li>
+                    <% if (member_info.role==='admin' ){ %>
+                    <li><a href="/admin/home">管理</a></li>
+                    <% } %>
+                    <li><a href="/user/journalManage">日誌管理</a></li>
+                    <li><a href="/user/logout">登出</a></li>
+                </ul>
+            </li>
+            <% } %>
+            <!-- <li class="nav-footer"></li> -->
+        </ul>
+    </nav>
+</header>

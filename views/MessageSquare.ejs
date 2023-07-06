@@ -1,0 +1,546 @@
+<% layout('layout') %>
+
+<body>
+  <main id="MessageSquare">
+    <h1>留言板</h1>
+    <section id="main" class="container medium">
+      <div id="status-box">Server: <span id="status">-</span> / <span id="online">0</span> online.</div>
+      <div id="content-box">
+        <section id="content">
+
+        </section>
+        <div class="quicktool">
+          <div class="jumpfloor col">
+            <input onkeypress="elevator(event);" type="text" placeholder="？樓" data-gtm="點擊電梯" data-gtm_type_name="自行輸入"
+              data-gtm_service_name="forum" data-gtm_page_name="哈啦板文章內容頁" style="text-align: center;">
+            <button onclick="Forum.C.elevator({keyCode: 13, manual: true, target: {value: 1}}, 60599, 300)"
+              data-gtm="點擊電梯" data-gtm_type_name="到一樓" data-gtm_service_name="forum"
+              data-gtm_page_name="哈啦板文章內容頁">一樓</button>
+            <button onclick="Forum.C.elevator({keyCode: 13, manual: true, target: {value: 768}}, 60599, 300)"
+              data-gtm="點擊電梯" data-gtm_type_name="到最新" data-gtm_service_name="forum"
+              data-gtm_page_name="哈啦板文章內容頁">最新</button>
+          </div>
+
+          <!-- <div class="quicktool iconbtn" onclick="window.scroll({ top: 0, left: 0, behavior: 'smooth' });"
+            data-gtm="點擊電梯" data-gtm_type_name="top" data-gtm_service_name="forum" data-gtm_page_name="哈啦板文章內容頁">
+            <svg viewBox="0 0 26.95 22.21" style="pointer-events: none;">
+              <g>
+                <path
+                  d="M26.37,7.06L13.55,0,.73,7.06c-.54,.3-.74,.98-.44,1.53l.31,.56c.3,.54,.98,.74,1.53,.44L13.55,3.29l11.43,6.3c.54,.3,1.23,.1,1.53-.44l.31-.56c.3-.54,.1-1.23-.44-1.53Z">
+                </path>
+                <g>
+                  <path d="M8.26,13.95v1.79h-3.24v6.47h-1.79v-6.47H0v-1.79H8.26Z"></path>
+                  <path
+                    d="M15.66,13.95c.93,0,1.7,.76,1.7,1.7v4.87c0,.94-.77,1.7-1.7,1.7h-4.87c-.94,0-1.7-.76-1.7-1.7v-4.87c0-.94,.76-1.7,1.7-1.7h4.87Zm-4.78,6.47h4.68v-4.68h-4.68v4.68Z">
+                  </path>
+                  <path
+                    d="M25.17,13.96c.94,0,1.71,.77,1.71,1.7v2.13c0,.93-.77,1.7-1.71,1.7h-4.77s.03,.03,.03,.08c0,0-.02,0-.03-.01v2.65h-1.78V13.96h6.55Zm-4.77,3.74h4.68v-1.96h-4.68v1.96Z">
+                  </path>
+                </g>
+              </g>
+            </svg>
+          </div>
+
+          <div class="quicktool iconbtn"
+            onclick="window.scroll({ top: jQuery(document).height(), left: 0, behavior: 'smooth' });" data-gtm="點擊電梯"
+            data-gtm_type_name="end" data-gtm_service_name="forum" data-gtm_page_name="哈啦板文章內容頁">
+            <svg viewBox="0 0 26.8 22.21" style="pointer-events: none;">
+              <g>
+                <g>
+                  <path d="M7.75,1.79H1.92v1.45H6.61v1.79H1.92v1.45H7.75v1.79H.12V0H7.75V1.79Z"></path>
+                  <path d="M15.34,0h1.8V8.26h-1.84L10.66,2.73v5.53h-1.78V0h1.84l4.62,5.51V0Z"></path>
+                  <path
+                    d="M25,0c.94,0,1.71,.76,1.71,1.7V6.56c0,.94-.77,1.7-1.71,1.7h-6.55V0h6.55Zm-4.77,6.47h4.68V1.79h-4.68V6.47Z">
+                  </path>
+                </g>
+                <path
+                  d="M.58,15.15l12.82,7.06,12.82-7.06c.54-.3,.74-.98,.44-1.53l-.31-.56c-.3-.54-.98-.74-1.53-.44l-11.43,6.3L1.97,12.62c-.54-.3-1.23-.1-1.53,.44l-.31,.56c-.3,.54-.1,1.23,.44,1.53Z">
+                </path>
+              </g>
+            </svg>
+          </div> -->
+        </div>
+      </div>
+      <section id="send-box">
+        <% if (isLogin) { %>
+        <textarea id="message" name="message" placeholder="輸入後按enter送出" required></textarea>
+        <% } else { %>
+        <textarea id="message" placeholder="快登入發表留言吧~~"
+          onclick="document.querySelector('#message').disabled='disabled'; window.location.href = '/member/login';"></textarea>
+        <% } %>
+      </section>
+      <section id="msg-status">
+
+      </section>
+    </section>
+  </main>
+
+  <!-- <script src="/socket.io/socket.io.js"></script> -->
+  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+  <script src="https://kit.fontawesome.com/cfda757855.js" crossorigin="anonymous"></script>
+  <script>
+    const content = document.getElementById("content");
+    const status = document.getElementById("status");
+    const online = document.getElementById("online");
+    const MsgStatusContainer = document.querySelector("#msg-status");
+
+    document.addEventListener("DOMContentLoaded", function () {
+      getMessage();
+    });
+
+    const pusher = new Pusher('99096110976fbf96c83a', {
+      cluster: 'us3'
+    });
+    const channel = pusher.subscribe('MessageSquare');
+
+    // 連線狀態
+    pusher.connection.bind("state_change", function (states) {
+      // states = {previous: 'oldState', current: 'newState'}
+      status.innerText = states.current;
+    });
+
+    // 接收在線人數
+    channel.bind("pusher:subscription_count", (data) => {
+      online.innerText = data.subscription_count;
+    });
+
+    // 送出新訊息
+    document.querySelector("#message")
+      .addEventListener('keyup', function (event) {
+        // 如果按下enter鍵且沒按下shift鍵
+        if ((event.keyCode === 13 && !event.shiftKey)) {
+          // 訊息框是不是空的
+          if (
+            document.querySelector("#message").value.slice(0, -1) === "") {
+            document.querySelector("#message").classList.add('error');
+            document.querySelector("#message").value = "";
+            MsgStatus('alert-danger', '輸入框是空的', MsgStatusContainer);
+            return
+          }
+          document.querySelector("#message").disabled = true;
+          MsgStatus('alert-warning', '送出訊息中...', MsgStatusContainer);
+          const formData = new FormData();
+          formData.append('msg', document.querySelector("#message").value.slice(0, -1));
+          fetch("/user/MessageSquare", {
+            method: "POST",
+            Headers: {
+              'Content-Type': 'application/json'
+            },
+            body: formData
+          })
+            .then(response => response.json())
+            .then(result => {
+              return new Promise((resolve, reject) => {
+                if (result.status === 'success') {
+                  document.querySelector("#message").classList.remove('error');
+                  document.querySelector("#message").value = "";
+                  MsgStatus('alert-success', '成功送出訊息', MsgStatusContainer);
+                  resolve();
+                } else
+                  reject();
+              })
+            })
+            .catch(() => {
+              MsgStatus('alert-danger', '送出訊息失敗', MsgStatusContainer);
+            })
+            .finally(() => {
+              document.querySelector("#message").disabled = false;
+            })
+        }
+      });
+
+    // 接收新訊息
+    channel.bind('new-msg', function (msg) {
+      console.log(msg);
+      addMsgToBox(msg);
+      content.scrollTop = content.scrollHeight;
+    });
+
+    // 加載網頁後讀取全部訊息
+    function getMessage() {
+      let msgs = [];
+      fetch('/MessageSquare/data')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          return new Promise((resolve, reject) => {
+            if (data.status === 'success') {
+              msgs = data.data;
+              resolve();
+            } else
+              reject();
+          })
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+          msgs = [{ name: "", msg: "讀取訊息失敗", id: '', timestamp: "" }];
+        })
+        .finally(() => {
+          msgs.forEach(element => {
+            addMsgToBox({
+              id: element.id,
+              msg: element.msg,
+              name: element.member.name,
+              timestamp: element.timestamp,
+            });
+          });
+          content.scrollTop = content.scrollHeight;
+        })
+    }
+
+    // 新增訊息到方框中
+    function addMsgToBox(d) {
+      const div = document.createElement("div");
+      div.className = "msg row";
+      div.id = `msg-${d.id}`;
+      div.setAttribute("data-time", new Date(d.timestamp).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }));
+
+      const article = document.createElement("div");
+      article.className = "article";
+
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "content-name";
+      nameSpan.textContent = d.name;
+
+      // const msgDiv = document.createElement("div");
+      // msgDiv.className = "container-msg";
+      const msgSpan = document.createElement("span");
+      msgSpan.className = "content-msg";
+      msgSpan.textContent = d.msg;
+      // msgDiv.appendChild(msgSpan);
+
+      const footerDiv = document.createElement("div");
+      footerDiv.className = "content-footer";
+
+      const floorSpan = document.createElement("span");
+      floorSpan.className = "edittime";
+      floorSpan.setAttribute("name", "comment_floor");
+      floorSpan.textContent = `B${d.id}`;
+
+      const timeSpan = document.createElement("span");
+      timeSpan.className = "edittime";
+      timeSpan.textContent = new Date(d.timestamp).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
+
+      footerDiv.appendChild(floorSpan);
+      footerDiv.appendChild(timeSpan);
+
+      article.appendChild(nameSpan);
+      article.appendChild(msgSpan);
+      article.appendChild(footerDiv);
+
+      const menuButton = document.createElement("button");
+      menuButton.type = "button";
+      menuButton.className = "content-menu";
+      // menuButton.setAttribute("aria-expanded", "false");
+
+      const menuIcon = document.createElement("i");
+      menuIcon.className = "material-icons";
+      menuIcon.textContent = "⋮";
+
+      menuButton.appendChild(menuIcon);
+
+      <% if (isLogin && member_info.role === 'admin') { %>
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "content-delete";
+        deleteButton.setAttribute("onclick", "deleteMsg(this)");
+        // deleteButton.setAttribute("aria-expanded", "false");
+
+        const deleteIcon = document.createElement("i");
+        deleteIcon.className = "fa-regular fa-trash-can";
+
+        deleteButton.appendChild(deleteIcon);
+      <% } %>
+
+        div.appendChild(article);
+      <% if (isLogin && member_info.role === 'admin') { %>
+        div.appendChild(deleteButton);
+      <% } %>
+        div.appendChild(menuButton);
+
+      content.appendChild(div);
+
+      // if (content.children.length > max_record) {
+      //     rmMsgFromBox();
+      // }
+    }
+
+    // 刪除留言
+    function deleteMsg(element) {
+      const formData = new FormData();
+      formData.append('id', element.parentElement.id.replace("msg-", ""));
+      fetch("/admin/MessageSquare/delete", {
+        method: "POST",
+        Headers: {
+          'Content-Type': 'application/json'
+        },
+        body: formData
+      })
+        .then(response => response.json())
+        .then(result => {
+          return new Promise((resolve, reject) => {
+            if (result.status === 'success') {
+              document.querySelector(`#${element.parentElement.id}`).remove();
+              document.querySelector("#msg-status")
+                .innerHTML = `
+                      <div class="alert alert-success alert-dismissible fade show" role="alert">
+                          成功刪除訊息
+                      </div>
+                    `;
+              resolve();
+            } else
+              reject();
+          })
+        })
+        .catch(() => {
+          document.querySelector("#msg-status")
+            .innerHTML = `
+                  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      刪除訊息失敗
+                  </div>
+                `;
+        })
+    }
+
+    function MsgStatus(type, info, container) {
+      // 创建警告框元素
+      const alertDiv = document.createElement("div");
+      alertDiv.classList.add("alert", type);
+      alertDiv.setAttribute("role", "alert");
+
+      // 创建警告框内容
+      const alertText = document.createTextNode(info);
+
+      // 将内容添加到警告框元素中
+      alertDiv.appendChild(alertText);
+
+      container.innerHTML = "";
+      container.appendChild(alertDiv);
+    }
+
+  </script>
+  <script>
+    function elevator(event) {
+      if (event.keyCode == 13) {
+        floor = parseInt((event.target || event.srcElement).value, 10);
+        if (!isNaN(floor)) {
+          element = document.querySelector(`#msg-${floor}`);
+          element.scrollIntoView();
+          element.style.animation = '2s ease 0s 1 normal none running highlight';
+          element.addEventListener('animationend', () => {
+            // 在动画结束后移除动画属性
+            element.style.animation = '';
+          });
+        }
+      }
+    }
+  </script>
+  <!-- <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      var socket = io();
+      var max_record;
+      var status = document.getElementById("status");
+      var online = document.getElementById("online");
+      var sendForm = document.getElementById("send-form");
+      var content = document.getElementById("content");
+      // var nameInputBox = document.getElementById("name");
+      // let token = getCookie("token");
+      // if (name) {
+      //     nameInputBox.value = name;
+      // }
+
+
+      socket.on("connect", function () {
+        status.innerText = "Connected.";
+      });
+
+      socket.on("disconnect", function () {
+        status.innerText = "Disconnected.";
+      });
+
+      socket.on("logout", function () {
+        alert('登入逾時，請重新登入');
+        window.location.replace("/member/login");
+      });
+
+      // 接收在線人數
+      socket.on("online", function (amount) {
+        online.innerText = amount;
+      });
+
+      // 加載網頁後讀取全部訊息
+      socket.on("MessageRecord", function (msgs) {
+        if (msgs.status === 'success') {
+          console.log(msgs.data);
+        }
+        else {
+          console.log('There was a problem with the fetch operation');
+          msgs.data = [{ name: "", msg: "讀取訊息失敗", timestamp: "" }]
+        }
+        const promises = [];
+        msgs.data.forEach(element => {
+          addMsgToBox(element);
+        });
+        content.scrollTop = content.scrollHeight;
+      });
+
+      sendForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // socket.emit("send", sendForm['msg'].value);
+        // sendForm['msg'].value = "";   //清空文字框
+        // setCookie("name", nameInputBox.value);
+      });
+
+      // 送出新訊息
+      document.querySelector("#message")
+        .addEventListener('keyup', function (event) {
+          // 如果按下enter鍵且沒按下shift鍵
+          if ((event.keyCode === 13 && !event.shiftKey)) {
+            // 訊息框是不是空的
+            if (document.querySelector("#message").value.slice(0, -1) === "") {
+              document.querySelector("#message").classList.add('error');
+              document.querySelector("#message").value = "";
+              return
+            }
+            socket.emit("send", document.querySelector("#message").value.slice(0, -1));
+            document.querySelector("#message").value = "";
+          }
+        });
+
+      // 送出新訊息是否成功
+      socket.on("send-msg-status", (status) => {
+        if (status)
+          document.querySelector("#send-msg-status")
+            .innerHTML = `
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  成功送出訊息
+              </div>
+            `;
+        else
+          document.querySelector("#send-msg-status")
+            .innerHTML = `
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  送出訊息失敗
+              </div>
+            `;
+      })
+
+      // 接收新訊息
+      socket.on("new-msg", (msg) => {
+        addMsgToBox(msg);
+        content.scrollTop = content.scrollHeight;
+      });
+
+      socket.on("maxRecord", function (amount) {
+        max_record = amount;
+      });
+
+
+      // 載入訊息
+      function addMsgToBox(d) {
+        const div = document.createElement("div");
+        div.className = "msg row";
+        div.setAttribute("data-time", new Date(d.timestamp).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }));
+
+        const article = document.createElement("div");
+        article.className = "article";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "content-name";
+        nameSpan.textContent = d.name;
+
+        const msgSpan = document.createElement("span");
+        msgSpan.className = "content-msg";
+        msgSpan.textContent = d.msg;
+
+        const footerDiv = document.createElement("div");
+        footerDiv.className = "content-footer";
+
+        const floorSpan = document.createElement("span");
+        floorSpan.className = "edittime";
+        floorSpan.setAttribute("name", "comment_floor");
+        floorSpan.textContent = `B${d.id}`;
+
+        const timeSpan = document.createElement("span");
+        timeSpan.className = "edittime";
+        timeSpan.textContent = new Date(d.timestamp).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
+
+        const menuButton = document.createElement("button");
+        menuButton.type = "button";
+        menuButton.className = "content-menu";
+        menuButton.setAttribute("aria-expanded", "false");
+
+        const menuIcon = document.createElement("i");
+        menuIcon.className = "material-icons";
+        menuIcon.textContent = "⋮";
+
+        menuButton.appendChild(menuIcon);
+
+        footerDiv.appendChild(floorSpan);
+        footerDiv.appendChild(timeSpan);
+
+        article.appendChild(nameSpan);
+        article.appendChild(msgSpan);
+        article.appendChild(footerDiv);
+
+        div.appendChild(article);
+        div.appendChild(menuButton);
+
+        content.appendChild(div);
+
+        // if (content.children.length > max_record) {
+        //     rmMsgFromBox();
+        // }
+      }
+
+      // 移除多餘的訊息
+      function rmMsgFromBox() {
+        var childs = content.children;
+        childs[0].remove();
+      }
+
+      // function getCookie(cname) {
+      //     var name = cname + "=";
+      //     var ca = document.cookie.split(';');
+      //     for (var i = 0; i < ca.length; i++) {
+      //         var c = ca[i];
+      //         while (c.charAt(0) == ' ') {
+      //             c = c.substring(1);
+      //         }
+      //         if (c.indexOf(name) == 0) {
+      //             return c.substring(name.length, c.length);
+      //         }
+      //     }
+      //     return "";
+      // }
+
+      // function setCookie(cname, cvalue, exdays) {
+      //     var d = new Date();
+      //     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+      //     var expires = "expires=" + d.toUTCString();
+      //     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      // }
+
+      // function getCookie(cname) {
+      //     var name = cname + "=";
+      //     var ca = document.cookie.split(';');
+      //     for (var i = 0; i < ca.length; i++) {
+      //         var c = ca[i];
+      //         while (c.charAt(0) == ' ') {
+      //             c = c.substring(1);
+      //         }
+      //         if (c.indexOf(name) == 0) {
+      //             return c.substring(name.length, c.length);
+      //         }
+      //     }
+      //     return "";
+      // }
+    });
+  </script> -->
+
+</body>

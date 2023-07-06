@@ -1,0 +1,42 @@
+<% layout('layout') %>
+
+<body>
+    <main class="main" id="infoPage">
+        <h1>個人資料</h1>
+        <%-partial('partials/message') %>
+        <div class="box">
+            <form method="post" enctype="multipart/form-data" action="/user/update"
+                onreset='preview.src = "data:image/jpg;base64,<%= member_info.img%>";'>
+                <section class="row row-split">
+                    <input required type="text" name="name" id="name" value="<%= member_info.name%>" placeholder="Name">
+                    <input readonly required type="email" name="email" id="email" value="<%= member_info.email%>"
+                        placeholder="Email" style="color: gray;">
+                </section>
+                <section class="row">
+                    <!-- <div class="col"> -->
+                        <img id="img_show" class="img" title="Profile picture" <% if (member_info.img!==null){ %>
+                            src="data:image/jpg;base64,<%= member_info.img%>" <% }else{ %> src="/images/user_icon.png"
+                            <% } %>>
+                    <!-- </div> -->
+                    <div class="col col-vertical">
+                        <label for="img">頭像</label>
+                        <input id="img" type="file" accept="image/*" name="img">
+                    </div>
+                </section>
+                <section class="row row-center">
+                    <input type="submit" value="更新資料">
+                    <input type="reset" value="還原">
+                </section>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        var input = document.getElementById('img');
+        var preview = document.getElementById('img_show');
+
+        input.addEventListener('change', updateImageDisplay); function updateImageDisplay() {
+            preview.src = window.URL.createObjectURL(input.files[0]);
+        }
+    </script>
+</body>

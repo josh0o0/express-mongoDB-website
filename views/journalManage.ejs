@@ -1,0 +1,33 @@
+<% layout('layout') %>
+
+    <body>
+        <main class="main" id="journalManage">
+            <h1>日誌管理</h1>
+            <%-partial('partials/message') %>
+            <section class="box">
+                <form method="post" action="/user/journal">
+                    <div class="row">
+                        <input required type="text" name="title" placeholder="標題">
+                    </div>
+                    <div>
+                        <textarea required type="text" name="content" placeholder="內容" rows="6"></textarea>
+                    </div>
+                    <div class="row">
+                        <input type="submit" value="發布">
+                    </div>
+                </form>
+            </section>
+        </main>
+        <!-- <script src="/tinymce/tinymce.min.js"></script> -->
+        <script src="https://cdn.tiny.cloud/1/0xtmqckfwwrxvcunj5tbjnwdvw2d84dsm9pr7xkd9e5984kq/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+        <script>tinymce.init({
+                selector: 'textarea',
+                setup: function (editor) {
+                        editor.on('change', function (e) {
+                        editor.save();
+                    });
+                },
+                language:'zh_TW'
+            });
+        </script>
+    </body>

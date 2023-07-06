@@ -1,0 +1,177 @@
+<% layout('layout') %>
+
+<body>
+    <main id="journal">
+        <h1>日誌</h1>
+        <div class="search-container">
+            <input type="text" placeholder="搜尋...">
+            <button type="submit">搜尋</button>
+            <button type="reset">清除</button>
+        </div>
+        <div class="sort">
+            <label for="sort">排序：</label>
+            <select id="sort" name="sort">
+                <option value="desc">時間遞減</option>
+                <option value="asc">時間遞增</option>
+            </select>
+        </div>
+
+        <div class="row" id="journal_list">
+
+        </div>
+    </main>
+</body>
+
+<script>
+    const search = document.querySelector(".search-container");
+    const select = document.getElementById("sort");
+    const journal_list = document.getElementById("journal_list");
+    let journal_row;
+    let now_row;
+
+    document.addEventListener("DOMContentLoaded", function () {
+        getJournal();
+    });
+
+    search.querySelector("input").addEventListener('keyup', function (event) {
+        // 如果按下enter鍵
+        if (event.keyCode === 13) {
+            const searchValue = search.querySelector("input").value;
+            if (searchValue !== "") searchJournal(searchValue);
+        }
+    });
+    search.querySelector("button[type=submit]").addEventListener("click", function () {
+        const searchValue = search.querySelector("input").value;
+        if (searchValue !== "") searchJournal(searchValue);
+    });
+    search.querySelector("button[type=reset] ").addEventListener("click", function () {
+        search.querySelector("button[type=reset]").style.display = 'none';
+        search.querySelector("input").value = "";
+        now_row = journal_row;
+        sortJournal(now_row, select.value);
+        show_journal(now_row);
+    });
+
+    select.addEventListener("change", function () {
+        sortJournal(now_row, this.value);
+    });
+
+    function show_journal(journal_row) {
+        journal_list.innerHTML = "";
+        let journal_text = '';
+        journal_row.forEach(element => {
+
+            // let PureText;
+            // element.content.querySelectorAll('*').forEach((tag)=>{
+
+            // })
+            // const tempDiv = document.createElement("div");
+            // tempDiv.innerHTML = element.content;
+            // 使用textContent屬性來獲取純文字
+            // element.content = tempDiv.textContent;
+            // journal_list.innerHTML += `
+            //                         <section class="log-item" data-time="${new Date(element.timestamp).toLocaleString()}">
+            //                             <a href="/journal?id=${element.id}" class="col col-vertical" title="${element.title}">
+            //                                 <h2>${element.title}</h2>
+            //                                 <h3>作者：${element.member.name}</h3>
+            //                                 <p class="date">${new Date(element.timestamp).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })}</p>
+            //                                 <p class="content">${element.content}</p>
+            //                             </a>
+            //                         </section>
+            //                     `;
+
+            const section = document.createElement('section');
+            section.classList.add('log-item');
+            section.setAttribute('data-time', new Date(element.timestamp).toLocaleString());
+
+            const link = document.createElement('a');
+            link.href = `/journals/${element.id}`;
+            link.classList.add('col', 'col-vertical');
+            link.title = element.title;
+
+            const h2 = document.createElement('h2');
+            h2.textContent = element.title;
+
+            const h3 = document.createElement('h3');
+            h3.textContent = `作者：${element.member.name}`;
+
+            const date = document.createElement('p');
+            date.classList.add('date');
+            date.textContent = new Date(element.timestamp).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
+
+            const content = document.createElement('p');
+            content.classList.add('content');
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = element.content;
+            content.textContent = tempDiv.querySelector('#contentDiv').textContent;
+            // console.log(tempDiv.querySelector('#contentDiv').textContent)
+
+            link.appendChild(h2);
+            link.appendChild(h3);
+            link.appendChild(date);
+            link.appendChild(content);
+
+            section.appendChild(link);
+            journal_list.appendChild(section);
+        });
+    }
+
+    function sortJournal(journal_row, sortValue) {
+        journal_row.sort((a, b) => {
+            switch (sortValue) {
+                case "desc":
+                    return b.id - a.id;
+                case "asc":
+                    return a.id - b.id;
+                default:
+                    return;
+            }
+        });
+        show_journal(journal_row);
+    }
+
+    function getJournal() {
+        fetch('/getJournal')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(result => {
+                return new Promise((resolve, reject) => {
+                    if (result.status === 'success')
+                        resolve(result.data);
+                    else
+                        reject();
+                });
+            }).then((data) => {
+                journal_row = data;
+                now_row = journal_row;
+                console.log(journal_row);
+                show_journal(journal_row);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
+
+    function searchJournal(query) {
+        search.querySelector("button[type=reset]").style.display = 'block';
+        fetch(`/searchJournal?query=${query}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                now_row = data.journal;
+                sortJournal(now_row, select.value);
+                show_journal(now_row);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
+</script>
